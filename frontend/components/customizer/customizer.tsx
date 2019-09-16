@@ -75,7 +75,7 @@ export default function Customizer({
     )
   }
 
-  async function copyMarkup(markupFormat: MarkupFormat) {
+  function copyMarkup(markupFormat: MarkupFormat): Promise<void> {
     const builtBadgeUrl = generateBuiltBadgeUrl()
     const markup = generateMarkup({
       badgeUrl: builtBadgeUrl,
@@ -84,18 +84,17 @@ export default function Customizer({
       markupFormat,
     })
 
-    try {
-      await clipboardCopy(markup)
-    } catch (e) {
-      setMessage('Copy failed')
-      setMarkup(markup)
-      return
-    }
-
-    setMarkup(markup)
-    if (indicatorRef.current) {
-      indicatorRef.current.trigger()
-    }
+    return clipboardCopy(markup)
+      .then(() => {
+        setMarkup(markup)
+        if (indicatorRef.current) {
+          indicatorRef.current.trigger()
+        }
+      })
+      .catch(() => {
+        setMessage('Copy failed')
+        setMarkup(markup)
+      })
   }
 
   function renderMarkupAndLivePreview() {
