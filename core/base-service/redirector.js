@@ -4,6 +4,7 @@ const camelcase = require('camelcase')
 const emojic = require('emojic')
 const Joi = require('@hapi/joi')
 const queryString = require('query-string')
+const log = require('../server/log')
 const BaseService = require('./base')
 const {
   serverHasBeenUpSinceResourceCached,
@@ -116,9 +117,13 @@ module.exports = function redirector(attrs) {
         }${targetPath}.${format}${urlSuffix}`
         trace.logTrace('outbound', emojic.shield, 'Redirect URL', redirectUrl)
 
-        ask.res.statusCode = 301
-        ask.res.setHeader('Location', redirectUrl)
-
+        try {
+          ask.res.statusCode = 301
+          ask.res.setHeader('Location', redirectUrl)
+        } catch (e) {
+          log.error(new Error(`An invalid URL in '${this.name}' redirector.`))
+          ask.res.statusCode = 500
+        }
         // To avoid caching mistakes for a long time, and to make this simpler
         // to reason about, use the same cache semantics as the static badge.
         setCacheHeadersForStaticResource(ask.res)
