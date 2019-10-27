@@ -94,16 +94,16 @@ describe('Redirector', function() {
     })
 
     // https://github.com/badges/shields/issues/4013
-    it('should return status code 500 when redirect URL is invalid (contains invalid characters)', async function() {
+    it('should temporarily redirect to a badge with message "inaccesible" when cunstructed redirect URL is invalid (contains invalid characters)', async function() {
       const { statusCode, headers } = await got(
         `${baseUrl}/very/old/service/hello\nworld.svg`,
         {
-          throwHttpErrors: false,
+          followRedirect: false,
         }
       )
 
-      expect(statusCode).to.equal(500)
-      expect(headers.location).to.be.undefined
+      expect(statusCode).to.equal(302)
+      expect(headers.location).to.equal('/badge/badge-inaccessible-lightgray')
     })
 
     it('should redirect raster extensions to the canonical path as configured', async function() {

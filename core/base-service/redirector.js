@@ -122,7 +122,8 @@ module.exports = function redirector(attrs) {
           ask.res.setHeader('Location', redirectUrl)
         } catch (e) {
           log.error(new Error(`An invalid URL in '${this.name}' redirector.`))
-          ask.res.statusCode = 500
+          ask.res.statusCode = 302
+          ask.res.setHeader('Location', '/badge/badge-inaccessible-lightgray')
         }
         // To avoid caching mistakes for a long time, and to make this simpler
         // to reason about, use the same cache semantics as the static badge.
