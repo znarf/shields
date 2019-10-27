@@ -94,7 +94,7 @@ describe('Redirector', function() {
     })
 
     // https://github.com/badges/shields/issues/4013
-    it('should temporarily redirect to a badge with message "inaccesible" when cunstructed redirect URL is invalid (contains invalid characters)', async function() {
+    it('should temporarily redirect to a badge with message "inaccesible" when redirect URL is invalid (contains invalid characters)', async function() {
       const { statusCode, headers } = await got(
         `${baseUrl}/very/old/service/hello\nworld.svg`,
         {
